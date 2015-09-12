@@ -247,10 +247,6 @@ else:
 
 print repr(dntemplate)
 
-# FIX ME!!!
-# This should be surrounded by a nice try: except: clause
-# which catches specific exceptions and outputs
-# nicer error messages.
 l = ldap.open(ldap_host)
 l.bind_s(binddn,bindpasswd,ldap.AUTH_SIMPLE)
 
@@ -264,14 +260,12 @@ for ca_name in ca_names:
 
   ca = opensslcnf.getcadata(ca_name)
 
-  # Ist der Zertifikattyp 'S/MIME for client use' ?
   if ca.isclientcert() and \
      not ca.database in old_db_filenames and \
      os.path.isfile(ca.database):
 
     old_db_filenames.append(ca.database)
 
-    # Anfrage starten
     certs_found = openssl.db.GetEntriesbyDN(ca.database,certdnfilter,casesensitive=1,onlyvalid=0)
 
     for cert_entry in certs_found:
@@ -432,7 +426,7 @@ for ca_name in ca_names:
                 pass
 
 	    try:
-#              print ldap_modlist
+
 	      l.add_s(ldap_dn,ldap_modlist)
 	    except ldap.NO_SUCH_OBJECT:
 	      sys.stderr.write('No such object "%s": Probably a parent entry is missing.\n' % (
